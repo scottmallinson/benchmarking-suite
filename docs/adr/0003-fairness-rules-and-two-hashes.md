@@ -5,7 +5,7 @@
 
 ## Context
 
-The Chief benchmark produced results that had to be thrown away: a model run with an uncommitted edit,
+The benchmark this grew from produced results that had to be thrown away: a model run with an uncommitted edit,
 other apps competing for memory, a run that mixed two commits. Each was found by a person noticing.
 The standing rule is that every candidate in a run is evaluated against exactly the same code and inputs,
 and that a changed rule can be applied to old answers without re-running.

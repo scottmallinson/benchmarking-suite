@@ -18,11 +18,11 @@ the judge agreed with itself.
 ```json
 "judge": {
   "adapter": "command",
-  "version": "claude-code-haiku-2026-10",
+  "version": "my-judge-2026-10",
   "maxSpend": 10,
   "pricing": { "inputPerMTok": 0.1, "outputPerMTok": 0.5 },
   "rubric": "Prefer the answer that is accurate, invents nothing and is most useful.",
-  "options": { "command": "claude", "args": ["-p"], "stdin": "text", "cwd": "judge-workdir" }
+  "options": { "command": "my-judge-cli", "args": ["--print"], "stdin": "text", "cwd": "judge-workdir" }
 }
 ```
 
@@ -35,13 +35,13 @@ the judge agreed with itself.
   Whether a subscription-backed command-line tool may be used this way is the provider's rule, not this
   suite's; check the terms before relying on it, and prefer an API key for any run that decides something.
 
-### `--judge file`: n8n, a notebook, anything
+### `--judge file`: a workflow tool, a notebook, anything
 
 The suite writes `judge-requests.json`: `{ "<id>": { "prompt": "..." } }`. Your tool answers each and writes
 `judgements.json` in the run folder:
 
 ```json
-{ "<id>": "{\"winner\": \"A\", \"reason\": \"...\"}", "_judge": "gemini-2.5-flash-2026-09" }
+{ "<id>": "{\"winner\": \"A\", \"reason\": \"...\"}", "_judge": "my-judge-2026-09" }
 ```
 
 then `bench score <run folder> --judge file`. `_judge` is required and names the judge and its version.

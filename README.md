@@ -11,9 +11,9 @@ The suite knows nothing about what you are testing. You bring three things:
 | **Scenarios**: the questions to ask, and how to tell a good answer from a bad one            | `scenarios/*.json`                  |
 | **Scoring and output**: which gates block, how dimensions are weighted, which files to write | `gates`, `scoring`, `reports`       |
 
-It was built from the benchmark run against [Chief](https://github.com/scottmallinson/chief.ai), an
-on-device AI app, and [examples/chief-style](examples/chief-style) shows that benchmark as a suite.
-Nothing in the core is specific to Chief, or to language models.
+It grew out of benchmarking small language models that run on modest hardware, and
+[examples/local-models](examples/local-models) shows that kind of benchmark as a suite. Nothing in the
+core is specific to language models.
 
 ## Quick start
 
@@ -90,11 +90,11 @@ bench init <folder>                       start a new suite
 
 ## Where it can run
 
-| Where                  | Runs benchmarks?                                        | Shows results? |
-| ---------------------- | ------------------------------------------------------- | -------------- |
-| Your computer          | Yes                                                     | Yes            |
-| Docker (Synology etc.) | Yes: [docs/docker-synology.md](docs/docker-synology.md) | Yes            |
-| Vercel                 | **No**, only results: [docs/vercel.md](docs/vercel.md)  | Yes            |
+| Where         | Runs benchmarks?                                       | Shows results? |
+| ------------- | ------------------------------------------------------ | -------------- |
+| Your computer | Yes                                                    | Yes            |
+| Docker        | Yes: [docs/docker.md](docs/docker.md)                  | Yes            |
+| Vercel        | **No**, only results: [docs/vercel.md](docs/vercel.md) | Yes            |
 
 Vercel functions cannot host a local model or give stable timings, so a Vercel deployment is a viewer for
 runs made elsewhere. Components that are hosted APIs could run in a function, but a full run outlasts
@@ -107,7 +107,7 @@ function time limits; see the docs for the options.
 - [Scenarios and checks](docs/scenarios-and-checks.md): writing scenarios, every built-in check, your own checks
 - [Results and reports](docs/results.md): output files, `results.json`, custom reporters
 - [Judging and human ratings](docs/judging.md): the optional judge, cost cap, rating page
-- [Docker and Synology](docs/docker-synology.md), [Vercel](docs/vercel.md)
+- [Docker](docs/docker.md), [Vercel](docs/vercel.md)
 - [Decisions](docs/adr/README.md)
 
 ## Development

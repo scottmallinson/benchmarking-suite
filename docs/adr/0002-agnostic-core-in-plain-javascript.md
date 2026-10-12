@@ -5,9 +5,9 @@
 
 ## Context
 
-The suite must benchmark things it knows nothing about, run in a small Docker image on a NAS, be deployable
+The suite must benchmark things it knows nothing about, run in a small Docker image, be deployable
 as a static results viewer, and be easy to read and change by people who did not write it. The benchmark it grew
-from (Chief's `bench/`) was plain Node ES modules with no test framework dependency.
+from was plain Node ES modules with no test framework dependency.
 
 ## Decision
 

@@ -129,7 +129,7 @@ function collect(pairs, rawById) {
 /**
  * Judge the answers, if asked to. Modes:
  *   none  (default)  no judge; code checks and human ratings only
- *   file             write judge-requests.json for any outside tool (n8n, a notebook, a person);
+ *   file             write judge-requests.json for any outside tool (a workflow tool, a notebook, a person);
  *                    read judgements.json back: { "<id>": "<raw reply>", "_judge": "<name and version>" }
  *   on               call the judge adapter in the config (config.judge.adapter / options)
  * Judging never happens during the benchmark, so it cannot slow the thing being measured.

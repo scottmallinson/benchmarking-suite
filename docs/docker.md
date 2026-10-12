@@ -1,4 +1,4 @@
-# Docker, and the Synology DS1821+
+# Docker
 
 One image does both jobs: it runs benchmarks (`run`, `score`) and shows results (`serve`, the default).
 
@@ -18,7 +18,7 @@ The image has no dependencies to download: it is Node plus this repository. It r
 ```sh
 docker run --rm \
   -v "$PWD/suite:/suite:ro" -v "$PWD/results:/results" \
-  -e BENCH_MACHINE=synology-ds1821plus -e BENCH_REVISION=my-code-v3 \
+  -e BENCH_MACHINE=my-host -e BENCH_REVISION=my-code-v3 \
   benchmarking-suite run --config /suite/bench.config.json --out /results
 
 docker run -d --name bench-viewer -p 8080:8080 -v "$PWD/results:/results:ro" benchmarking-suite
@@ -38,30 +38,20 @@ Things to know inside a container:
 - **A model server** can be started inside the same container by a component's `lifecycle` if its binary
   is in the image, or run as a second container the component talks to over the compose network. The
   compose file has a commented example using llama.cpp's server image; pin the image and model yourself.
+- **Architecture.** The image has no native code, so it builds for whatever platform you build on
+  (`linux/amd64` or `linux/arm64`).
 
-## On the Synology DS1821+
+## Choosing where to run
 
-What is known: the DS1821+ is x86-64, so the image is built for `linux/amd64` with no extra steps. It has
-64 GB of memory here.
+Set `machine` (or `BENCH_MACHINE`) so every result says where it came from.
 
-What is **not** verified: the exact CPU. Retailer listings and reviews say AMD Ryzen V1500B (4 cores, 2.2 GHz); you recall a V1700.
-Synology's own page did not load for me, so check `cat /proc/cpuinfo` on the NAS. Container Manager is
-installed per your confirmation; the DSM version is unknown.
-
-Suggested setup:
-
-1. Copy this repository to the NAS (`/volume1/docker/benchmarking-suite`), with `suite/` and `results/` beside the compose file.
-2. Container Manager > Project > Create, point at that folder, and it reads `compose.yaml`. Or SSH in and use `docker compose`.
-3. Run a benchmark with the `run` profile; leave `viewer` running. Open `http://<nas>:8080`.
-
-How to use the NAS well, from the benchmark's own rules:
-
-- **Quality and correctness: yes. Speed and memory: only against other NAS runs.** Timings depend on the
-  exact chip, memory and what else the NAS is doing; a NAS result must never be compared with a result
-  from another machine. Set `machine` (or `BENCH_MACHINE`) so each result says where it came from.
-- Its steady, always-on nature suits long runs, extra repeats and screening new candidates before they go
-  to the machine that decides.
-- Give the benchmark a cap so DSM and your other containers stay responsive (`cpus`, `mem_limit` in the compose
+- **Quality and correctness can be measured anywhere. Speed and memory only mean something against other
+  runs on the same machine.** Timings depend on the exact chip, memory and what else the host is doing;
+  never compare a result with one from different hardware. `targetMachine` in the config makes the report
+  flag runs from somewhere else.
+- A steady, always-on host suits long runs, extra repeats and screening new candidates before they go to the
+  machine that decides.
+- Cap what a benchmark may use so the host's other work stays responsive (`cpus`, `mem_limit` in the compose
   file), and use `preflight` to refuse to start when memory is short.
-- Large models on a CPU with no GPU are slow. The suite measures that honestly rather than hiding it, but plan runs
-  that take hours.
+- Large models on a CPU with no GPU are slow. The suite measures that honestly rather than hiding it, but plan
+  runs that take hours.

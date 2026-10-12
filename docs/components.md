@@ -4,8 +4,8 @@ A component is an `id`, an `adapter`, adapter `options`, and optionally a `lifec
 
 ```json
 {
-  "id": "qwen3-1.7b",
-  "name": "Qwen3 1.7B",
+  "id": "small-model",
+  "name": "Small model",
   "adapter": "openai-compatible",
   "options": { "baseUrl": "http://127.0.0.1:11436/v1", "temperature": 0.2, "maxTokens": 600 },
   "lifecycle": {

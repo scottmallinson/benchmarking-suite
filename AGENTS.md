@@ -5,16 +5,13 @@ files such as `CLAUDE.md` point here so there is a single source of truth.
 
 ## Project overview
 
-<!-- Replace with a 2-3 sentence description of what this project is. -->
-
 A benchmarking suite. It runs any "component" (a model, prompt, service, program) against
 user-written "scenarios", applies checks and gates, and writes the same readable report every time. The
 core knows nothing about what is being tested: adapters (`src/adapters/`), checks (`src/checks/`) and
 reporters (`src/reporters/`) are the plug-in points. Plain Node ES modules, **no runtime dependencies**.
 See `README.md` and `docs/`; the reasons are in `docs/adr/`.
 
-Prior art: the benchmark in https://github.com/scottmallinson/chief.ai (`bench/`), shown as a suite in
-`examples/chief-style`.
+Worked example: a local-model benchmark expressed as a suite, in `examples/local-models`.
 
 Rules that must not erode:
 

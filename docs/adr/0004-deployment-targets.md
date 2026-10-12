@@ -5,7 +5,7 @@
 
 ## Context
 
-The suite is wanted as a Docker container (for a Synology NAS) and as a deployable service such as Vercel
+The suite is wanted as a Docker container (for a home server) and as a deployable service such as Vercel
 "where feasible". Benchmarks of local models need a process that stays up for hours, a model server on the
 same machine, and stable hardware for timings.
 

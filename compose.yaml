@@ -2,8 +2,7 @@
 #   docker compose up -d viewer
 #   docker compose run --rm bench run --config /suite/bench.config.json --out /results
 #
-# On a Synology NAS: Container Manager > Project > Create, point it at a folder holding this file,
-# and change the two host paths below to folders under /volume1/docker/. See docs/docker-synology.md.
+# The two host paths below (./suite and ./results) can be changed to any folders. See docs/docker.md.
 services:
   viewer:
     build: .
@@ -23,14 +22,14 @@ services:
     image: benchmarking-suite
     profiles: ['run']
     environment:
-      BENCH_MACHINE: synology-ds1821plus
+      BENCH_MACHINE: docker-host
       BENCH_REVISION: ${BENCH_REVISION:-}
       # Keys for hosted components or a hosted judge go here, never in the suite files:
       # ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - ./suite:/suite:ro
       - ./results:/results
-    # Optional: cap what a benchmark may use so the NAS stays responsive for everything else.
+    # Optional: cap what a benchmark may use so the host stays responsive for everything else.
     # mem_limit: 24g
     # cpus: 4
 
