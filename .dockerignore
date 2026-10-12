@@ -1,0 +1,10 @@
+.git
+node_modules
+bench-results
+public
+results
+test
+docs
+.github
+.husky
+.claude
