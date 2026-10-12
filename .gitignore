@@ -37,3 +37,7 @@ tmp/
 
 # Local agent settings
 .claude/settings.local.json
+
+# Benchmark output stays local; copy a run into results/ to publish its summary
+bench-results/
+public/
