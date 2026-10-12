@@ -13,14 +13,18 @@ Template repository. Replace this section when you start a real project.
 
 <!-- Keep these accurate; agents rely on them to verify their work. -->
 
-| Task             | Command                |
-| ---------------- | ---------------------- |
-| Install          | `npm install`          |
-| Format           | `npm run format`       |
-| Check formatting | `npm run format:check` |
-| Lint commits     | `npm run lint:commits` |
+| Task             | Command                      |
+| ---------------- | ---------------------------- |
+| Install          | `npm install` (tooling only) |
+| Test             | `npm test`                   |
+| Format           | `npm run format`             |
+| Check formatting | `npm run format:check`       |
+| Everything       | `npm run check`              |
+| Lint commits     | `npm run lint:commits`       |
+| Run the CLI      | `node bin/bench.js help`     |
 
-Add build, test and lint commands for your stack here.
+A test that guards an invariant (a gate blocks, a failed answer fails, a path is not served) is not finished
+until you have broken the thing it guards and watched the test fail.
 
 ## Conventions
 

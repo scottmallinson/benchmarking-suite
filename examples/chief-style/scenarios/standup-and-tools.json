@@ -1,0 +1,94 @@
+[
+  {
+    "id": "standup-first-person",
+    "group": "standup",
+    "title": "A stand-up update, in the first person, short",
+    "humanRate": true,
+    "input": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "Write a stand-up update in the first person, three sentences at most. No tools. Use only the facts given."
+        },
+        {
+          "role": "user",
+          "content": "Yesterday I merged: Fix login redirect. Today I have: Design review at 11:00. Blocked: waiting on Priya for the API key."
+        }
+      ]
+    },
+    "checks": [
+      { "type": "regex", "pattern": "\\b(I|I'm|I've|my)\\b", "label": "first person" },
+      { "type": "not-contains", "values": ["The user", "They "], "label": "not third person" },
+      { "type": "contains", "values": ["login", "11:00", "Priya"], "label": "keeps the facts" },
+      { "type": "length", "maxWords": 70, "label": "short" },
+      { "type": "no-invented", "gate": "G3-no-invention" },
+      {
+        "type": "tool-call",
+        "expectNone": true,
+        "label": "does not call a tool",
+        "dimension": "quality"
+      }
+    ]
+  },
+  {
+    "id": "tool-open-reviews",
+    "group": "tools",
+    "title": "Ask for reviews waiting on me: a tool with an allowed value",
+    "input": {
+      "messages": [{ "role": "user", "content": "Which reviews are waiting on me?" }],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "pull_requests",
+            "description": "List pull requests",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "whose": { "type": "string", "enum": ["mine", "review-requested"] },
+                "state": { "type": "string", "enum": ["open", "merged"] }
+              },
+              "required": ["whose", "state"]
+            }
+          }
+        }
+      ]
+    },
+    "checks": [
+      {
+        "type": "tool-call",
+        "tool": "pull_requests",
+        "arguments": { "whose": "review-requested", "state": { "oneOf": ["open"] } },
+        "dimension": "tools",
+        "gate": "G5-tool-valid",
+        "label": "right tool, allowed values"
+      }
+    ]
+  },
+  {
+    "id": "no-tool-needed",
+    "group": "tools",
+    "title": "A greeting needs no tool",
+    "input": {
+      "messages": [{ "role": "user", "content": "Thanks, that is all." }],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "pull_requests",
+            "description": "List pull requests",
+            "parameters": { "type": "object", "properties": {} }
+          }
+        }
+      ]
+    },
+    "checks": [
+      {
+        "type": "tool-call",
+        "expectNone": true,
+        "dimension": "tools",
+        "label": "abstains from calling a tool"
+      }
+    ]
+  }
+]

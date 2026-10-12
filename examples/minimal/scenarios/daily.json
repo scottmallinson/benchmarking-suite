@@ -1,0 +1,83 @@
+[
+  {
+    "id": "meetings-today",
+    "group": "summaries",
+    "title": "Two meetings, summarise the day",
+    "input": {
+      "messages": [
+        { "role": "system", "content": "You are a brief assistant. Only use the facts given." },
+        {
+          "role": "user",
+          "content": "Calendar for today: Standup 09:30 with Priya. Design review 14:00. Summarise my day in one or two sentences."
+        }
+      ]
+    },
+    "notes": "Two meetings only: Standup 09:30 and Design review 14:00.",
+    "checks": [
+      {
+        "type": "contains",
+        "values": ["Standup", "09:30", "Design review", "14:00"],
+        "label": "keeps the facts"
+      },
+      { "type": "order", "values": ["09:30", "14:00"], "label": "in time order" },
+      { "type": "no-invented", "gate": "no-invention", "label": "invents no time or person" },
+      { "type": "no-repeat", "dimension": "quality", "label": "does not circle" },
+      { "type": "length", "maxWords": 60, "label": "short" }
+    ]
+  },
+  {
+    "id": "nothing-today",
+    "group": "summaries",
+    "title": "An empty calendar: nothing to invent",
+    "input": {
+      "messages": [
+        { "role": "system", "content": "You are a brief assistant. Only use the facts given." },
+        { "role": "user", "content": "Calendar for today: (empty). What is on today?" }
+      ]
+    },
+    "checks": [
+      {
+        "type": "no-invented",
+        "gate": "no-invention",
+        "kinds": ["time", "name"],
+        "label": "invents nothing"
+      },
+      { "type": "regex", "pattern": "nothing|no meetings|empty|clear", "label": "says it is empty" }
+    ]
+  },
+  {
+    "id": "tool-weather",
+    "group": "tools",
+    "title": "Call the weather tool with valid arguments",
+    "input": {
+      "messages": [{ "role": "user", "content": "What is the weather in Leeds? Use celsius." }],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Current weather",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": { "type": "string" },
+                "unit": { "type": "string", "enum": ["celsius", "fahrenheit"] }
+              },
+              "required": ["city", "unit"]
+            }
+          }
+        }
+      ]
+    },
+    "checks": [
+      {
+        "type": "tool-call",
+        "tool": "get_weather",
+        "label": "right tool, valid arguments",
+        "gate": "tool-valid",
+        "dimension": "tools",
+        "arguments": { "city": "Leeds", "unit": { "oneOf": ["celsius"] } }
+      }
+    ]
+  }
+]

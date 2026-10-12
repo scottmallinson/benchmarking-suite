@@ -1,0 +1,59 @@
+{
+  "name": "minimal-example",
+  "repeats": 3,
+  "machine": "my-machine",
+  "reports": ["markdown", "json", "csv", "trend", "human-eval", "html"],
+  "gates": {
+    "no-invention": { "title": "Invents nothing", "minPassRate": 1 }
+  },
+  "scoring": {
+    "profiles": {
+      "default": { "weights": { "quality": 80, "speed": 20 } }
+    }
+  },
+  "components": [
+    {
+      "id": "careful-bot",
+      "name": "Careful bot (canned answers)",
+      "adapter": "mock",
+      "options": {
+        "latencyMs": 5,
+        "answers": {
+          "meetings-today": "You have two meetings today: Standup at 09:30 with Priya, and Design review at 14:00.",
+          "nothing-today": "Nothing is scheduled today.",
+          "tool-weather": {
+            "toolCalls": [
+              {
+                "name": "get_weather",
+                "arguments": { "city": "Leeds", "unit": "celsius" },
+                "argumentsValid": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sloppy-bot",
+      "name": "Sloppy bot (canned answers)",
+      "adapter": "mock",
+      "options": {
+        "latencyMs": 5,
+        "answers": {
+          "meetings-today": "Standup at 09:30, Design review at 14:00, and a 1:1 with Marcus at 16:45.\nStandup at 09:30, Design review at 14:00, and a 1:1 with Marcus at 16:45.",
+          "nothing-today": "You have a call with Marcus at 11:00.",
+          "tool-weather": {
+            "toolCalls": [
+              {
+                "name": "get_weather",
+                "arguments": { "city": "Leeds", "unit": "kelvin" },
+                "argumentsValid": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "scenarios": ["scenarios"]
+}
