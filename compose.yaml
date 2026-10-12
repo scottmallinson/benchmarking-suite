@@ -1,0 +1,41 @@
+# Viewer always on; benchmark runs on demand:
+#   docker compose up -d viewer
+#   docker compose run --rm bench run --config /suite/bench.config.json --out /results
+#
+# The two host paths below (./suite and ./results) can be changed to any folders. See docs/docker.md.
+services:
+  viewer:
+    build: .
+    image: benchmarking-suite
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      # Uncomment to put a password on the viewer (user name is ignored).
+      # BENCH_VIEW_PASSWORD: change-me
+      TZ: Europe/London
+    volumes:
+      - ./results:/results:ro
+
+  bench:
+    build: .
+    image: benchmarking-suite
+    profiles: ['run']
+    environment:
+      BENCH_MACHINE: docker-host
+      BENCH_REVISION: ${BENCH_REVISION:-}
+      # Keys for hosted components or a hosted judge go here, never in the suite files:
+      # ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./suite:/suite:ro
+      - ./results:/results
+    # Optional: cap what a benchmark may use so the host stays responsive for everything else.
+    # mem_limit: 24g
+    # cpus: 4
+
+  # Optional local model server for a component to talk to (llama.cpp). Pin the image and model yourself.
+  # llama:
+  #   image: ghcr.io/ggml-org/llama.cpp:server
+  #   profiles: ['run']
+  #   command: ['-m', '/models/model.gguf', '--host', '0.0.0.0', '--port', '8081', '--jinja', '--parallel', '1', '-c', '4096', '-t', '4']
+  #   volumes: ['./models:/models:ro']

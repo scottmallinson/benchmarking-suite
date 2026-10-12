@@ -1,8 +1,8 @@
 {
-  "name": "repo-template",
-  "version": "0.0.0",
+  "name": "benchmarking-suite",
+  "version": "0.1.0",
   "private": true,
-  "description": "Language-agnostic repository template for human and agentic development",
+  "description": "Benchmark any components (models, prompts, services, programs) against your own scenarios, with fair, repeatable, human-readable results",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -12,7 +12,11 @@
     "prepare": "husky || true",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:commits": "commitlint --from origin/main --to HEAD --verbose"
+    "lint:commits": "commitlint --from origin/main --to HEAD --verbose",
+    "bench": "node bin/bench.js",
+    "test": "node --test \"test/*.test.js\"",
+    "check": "npm run format:check && npm test",
+    "build:site": "node bin/bench.js build-site --results results --out public"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -23,5 +27,19 @@
     "husky": "^9.1.6",
     "lint-staged": "^17.6.0",
     "prettier": "^3.3.3"
-  }
+  },
+  "bin": {
+    "bench": "bin/bench.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottmallinson/benchmarking-suite.git"
+  },
+  "files": [
+    "bin",
+    "src",
+    "site",
+    "examples",
+    "docs"
+  ]
 }

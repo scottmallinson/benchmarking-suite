@@ -1,0 +1,117 @@
+[
+  {
+    "id": "brief-busy-day",
+    "group": "brief-busy",
+    "title": "Five meetings and two reviews waiting",
+    "humanRate": true,
+    "notes": "Next meeting is Standup at 09:30. Two reviews are waiting: PR 412 from Priya and PR 415 from Jon.",
+    "input": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You write a short morning brief. Use only the facts given. Lead with what needs attention soonest. At most 5 bullets. If nothing is given for a section, say nothing about it."
+        },
+        {
+          "role": "user",
+          "content": "Today is Monday.\nMeetings:\n- 09:30 Standup (Priya, Jon)\n- 11:00 Design review (Mei)\n- 13:00 Lunch with Sam\n- 14:30 Planning (team)\n- 16:00 One to one with Alex\n\nReviews waiting on me:\n- PR 412 Fix login redirect (Priya), open 3 days\n- PR 415 Add export button (Jon), open 1 day\n\nWrite my brief."
+        }
+      ]
+    },
+    "checks": [
+      {
+        "type": "contains",
+        "values": ["09:30", "Standup"],
+        "label": "leads with the next meeting"
+      },
+      { "type": "contains", "values": ["412", "415"], "label": "names both reviews" },
+      {
+        "type": "order",
+        "values": ["09:30", "11:00", "14:30", "16:00"],
+        "label": "meetings in time order"
+      },
+      { "type": "length", "maxBullets": 5, "label": "five bullets at most" },
+      { "type": "no-invented", "gate": "G3-no-invention", "label": "invents no time or person" },
+      { "type": "no-repeat", "gate": "G4-finishes", "label": "does not circle" }
+    ]
+  },
+  {
+    "id": "brief-school-day",
+    "group": "brief-quiet",
+    "title": "Only school events, no work tools connected",
+    "notes": "There is nothing work related today.",
+    "input": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You write a short morning brief. Use only the facts given. If nothing is given for a section, say nothing about it."
+        },
+        {
+          "role": "user",
+          "content": "Today is Wednesday.\nCalendar:\n- 08:45 School run\n- 15:30 Parents' evening, Year 5\n\nWrite my brief."
+        }
+      ]
+    },
+    "checks": [
+      { "type": "contains", "values": ["08:45", "15:30"], "label": "keeps both times" },
+      { "type": "no-invented", "gate": "G3-no-invention", "label": "invents no meeting" },
+      {
+        "type": "not-contains",
+        "values": ["standup", "pull request", "review"],
+        "label": "does not invent work"
+      },
+      { "type": "no-repeat", "gate": "G4-finishes" }
+    ]
+  },
+  {
+    "id": "brief-empty-day",
+    "group": "brief-quiet",
+    "title": "An empty calendar",
+    "input": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You write a short morning brief. Use only the facts given."
+        },
+        {
+          "role": "user",
+          "content": "Today is Friday.\nCalendar: nothing.\nReviews waiting: none.\n\nWrite my brief."
+        }
+      ]
+    },
+    "checks": [
+      { "type": "no-invented", "gate": "G3-no-invention", "label": "invents nothing" },
+      { "type": "length", "maxWords": 40, "label": "short" },
+      {
+        "type": "regex",
+        "pattern": "nothing|clear|no meetings|quiet|free",
+        "label": "says it is quiet"
+      }
+    ]
+  },
+  {
+    "id": "repeated-prs",
+    "group": "loops",
+    "title": "The same pull request listed nine times",
+    "input": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "List what is waiting on me, one line each. Use only the facts given."
+        },
+        {
+          "role": "user",
+          "content": "Waiting on me:\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)\n- PR 77 Update docs (Sam)"
+        }
+      ]
+    },
+    "checks": [
+      { "type": "contains", "values": ["77"], "label": "mentions the PR" },
+      {
+        "type": "no-repeat",
+        "gate": "G4-finishes",
+        "maxRepeats": 1,
+        "label": "does not repeat itself"
+      }
+    ]
+  }
+]

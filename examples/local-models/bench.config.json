@@ -1,0 +1,116 @@
+{
+  "name": "local-models",
+  "title": "Small local models behind an application harness",
+  "machine": "small-machine",
+  "targetMachine": "small-machine",
+  "repeats": 5,
+  "revision": { "git": "../../../my-application", "requireClean": true },
+  "preflight": {
+    "minFreeMemoryMb": 5000,
+    "forbidProcesses": ["Google Chrome", "Code Helper"]
+  },
+  "gates": {
+    "G2-fits": { "title": "Fits in 8 GB with room left", "metric": "peakRssMb", "max": 5000 },
+    "G2-no-swap": { "title": "No swapping during the run", "metric": "swapInPages", "max": 0 },
+    "G3-no-invention": { "title": "Invents nothing" },
+    "G4-finishes": { "title": "Finishes without circling" },
+    "G5-tool-valid": { "title": "Tool calls use allowed values", "minPassRate": 0.9 }
+  },
+  "scoring": {
+    "measures": {
+      "firstTokenMs": { "dimension": "speed", "good": 5000, "bad": 60000 },
+      "peakRssMb": { "dimension": "memory", "good": 2000, "bad": 5000 }
+    },
+    "profiles": {
+      "light": {
+        "weights": { "quality": 45, "tools": 10, "preference": 15, "speed": 20, "memory": 10 }
+      },
+      "standard": {
+        "weights": { "quality": 55, "tools": 15, "preference": 15, "speed": 10, "memory": 5 }
+      }
+    }
+  },
+  "humanEval": { "maxPairs": 50, "groups": ["brief-busy", "standup"], "consistencyRepeats": 3 },
+  "judge": {
+    "adapter": "command",
+    "version": "my-judge-2026-10",
+    "maxSpend": 10,
+    "options": {
+      "command": "my-judge-cli",
+      "args": ["--print"],
+      "stdin": "text",
+      "cwd": "judge-workdir",
+      "timeoutMs": 180000
+    }
+  },
+  "components": [
+    {
+      "id": "small-model-a",
+      "name": "Small model A (thinking off)",
+      "profiles": ["light"],
+      "adapter": "openai-compatible",
+      "options": {
+        "baseUrl": "http://127.0.0.1:11436/v1",
+        "temperature": 0.2,
+        "maxTokens": 600,
+        "extraBody": { "chat_template_kwargs": { "enable_thinking": false } }
+      },
+      "lifecycle": {
+        "start": {
+          "command": "llama-server",
+          "args": [
+            "-m",
+            "${MODELS_DIR}/model-a-Q4_K_M.gguf",
+            "--port",
+            "11436",
+            "--parallel",
+            "1",
+            "--jinja",
+            "-c",
+            "4096",
+            "-t",
+            "2"
+          ]
+        },
+        "health": { "url": "http://127.0.0.1:11436/health", "timeoutMs": 180000 },
+        "cooldownMs": 60000
+      }
+    },
+    {
+      "id": "small-model-b",
+      "name": "Small model B",
+      "profiles": ["light", "standard"],
+      "adapter": "openai-compatible",
+      "options": { "baseUrl": "http://127.0.0.1:11436/v1", "temperature": 0.2, "maxTokens": 600 },
+      "lifecycle": {
+        "start": {
+          "command": "llama-server",
+          "args": [
+            "-m",
+            "${MODELS_DIR}/model-b-Q4_K_M.gguf",
+            "--port",
+            "11436",
+            "--parallel",
+            "1",
+            "--jinja",
+            "-c",
+            "4096",
+            "-t",
+            "2"
+          ]
+        },
+        "health": { "url": "http://127.0.0.1:11436/health", "timeoutMs": 180000 },
+        "cooldownMs": 60000
+      }
+    },
+    {
+      "id": "hosted-reference",
+      "name": "Hosted reference (not for ranking on speed or memory)",
+      "enabled": false,
+      "profiles": ["standard"],
+      "adapter": "anthropic",
+      "options": { "model": "your-model-id-here", "maxTokens": 600 }
+    }
+  ],
+  "scenarios": ["scenarios"]
+}
