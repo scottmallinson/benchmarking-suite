@@ -7,7 +7,24 @@ files such as `CLAUDE.md` point here so there is a single source of truth.
 
 <!-- Replace with a 2-3 sentence description of what this project is. -->
 
-Template repository. Replace this section when you start a real project.
+A benchmarking suite. It runs any "component" (a model, prompt, service, program) against
+user-written "scenarios", applies checks and gates, and writes the same readable report every time. The
+core knows nothing about what is being tested: adapters (`src/adapters/`), checks (`src/checks/`) and
+reporters (`src/reporters/`) are the plug-in points. Plain Node ES modules, **no runtime dependencies**.
+See `README.md` and `docs/`; the reasons are in `docs/adr/`.
+
+Prior art: the benchmark in https://github.com/scottmallinson/chief.ai (`bench/`), shown as a suite in
+`examples/chief-style`.
+
+Rules that must not erode:
+
+- A run is fair or it is marked invalid: same inputs and same revision of the code under test for every
+  component (see ADR 0003). Do not add a way to mix runs.
+- Gates come before scores, and a failed answer must never pass a check.
+- Judged scores are never compared across judges.
+- Results must stay readable by a person and by `diff`: keep the report's sections and their order stable.
+- Performance matters: the suite must not disturb what it measures (no work during a run beyond asking,
+  checking and sampling; judging happens afterwards).
 
 ## Commands
 
