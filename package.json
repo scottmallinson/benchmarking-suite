@@ -1,0 +1,27 @@
+{
+  "name": "repo-template",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Language-agnostic repository template for human and agentic development",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "husky || true",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:commits": "commitlint --from origin/main --to HEAD --verbose"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "husky": "^9.1.6",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.3.3"
+  }
+}
