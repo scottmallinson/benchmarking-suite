@@ -10,8 +10,8 @@ What it shows:
 - **Components that need starting.** Each model is a `llama-server` the suite starts, waits for,
   watches the memory of, and stops again (`lifecycle`). `MODELS_DIR` is read from the environment.
 - **Gates before scores.** `G2` (fits in memory, no swapping), `G4` (no circling) and `G5` (valid tool
-  calls) block a model from being ranked. `G3` (invents nothing) is set to `warn`: it is reported
-  beside the score and does not block, which is the choice made for Chief after the first runs.
+  calls) block a model from being ranked. `G3` (invents nothing) blocks too, because Chief only works if what it
+  presents can be relied on. A gate can be set to `severity: "warn"` to report without blocking.
 - **Two profiles.** `light` (8 GB machine) and `standard` weigh the same dimensions differently.
   A component lists the profiles it competes in.
 - **A judge that costs nothing extra to try.** `judge` runs the installed `claude -p` from an empty folder

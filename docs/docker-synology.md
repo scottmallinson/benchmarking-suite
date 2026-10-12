@@ -44,9 +44,9 @@ Things to know inside a container:
 What is known: the DS1821+ is x86-64, so the image is built for `linux/amd64` with no extra steps. It has
 64 GB of memory here.
 
-What is **not** verified: the CPU is believed to be a Ryzen V1500B (4 cores, 8 threads) with no GPU, and
-whether Container Manager is installed and which DSM version is unknown. Check both (`cat /proc/cpuinfo`,
-Package Center).
+What is **not** verified: the exact CPU. Retailer listings and reviews say AMD Ryzen V1500B (4 cores, 2.2 GHz); you recall a V1700.
+Synology's own page did not load for me, so check `cat /proc/cpuinfo` on the NAS. Container Manager is
+installed per your confirmation; the DSM version is unknown.
 
 Suggested setup:
 

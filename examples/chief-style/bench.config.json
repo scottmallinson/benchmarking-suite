@@ -12,7 +12,7 @@
   "gates": {
     "G2-fits": { "title": "Fits in 8 GB with room left", "metric": "peakRssMb", "max": 5000 },
     "G2-no-swap": { "title": "No swapping during the run", "metric": "swapInPages", "max": 0 },
-    "G3-no-invention": { "title": "Invents nothing", "severity": "warn" },
+    "G3-no-invention": { "title": "Invents nothing" },
     "G4-finishes": { "title": "Finishes without circling" },
     "G5-tool-valid": { "title": "Tool calls use allowed values", "minPassRate": 0.9 }
   },
